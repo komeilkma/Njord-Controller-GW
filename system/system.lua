@@ -47,5 +47,14 @@ end;
 
 function waitUntilExt(id, ms)
 	subscribe(id, coroutine.running());
+	local message = ms and {
+		wait(ms)
+	} or {
+		coroutine.yield()
+	};
+	unsubscribe(id, coroutine.running());
+	if message[1] ~= nil then
+		return unpack(message);
+	end;
 	return false;
 end;
