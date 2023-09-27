@@ -38,10 +38,26 @@ function wait(ms)
 		log.debug("rtos.timer_start error");
 		return;
 	end;
+	local message = {
+		coroutine.yield()
+	};
+	if #message ~= 0 then
+		rtos.timer_stop(timerid);
+		taskTimerPool[coroutine.running()] = nil;
+		timerPool[timerid] = nil;
+		return unpack(message);
+	end;
 end;
 
 function waitUntil(id, ms)
 	subscribe(id, coroutine.running());
+	local message = ms and {
+		wait(ms)
+	} or {
+		coroutine.yield()
+	};
+	unsubscribe(id, coroutine.running());
+	return message[1] ~= nil, unpack(message, 2, #message);
 end;
 
 
