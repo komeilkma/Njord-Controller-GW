@@ -19,6 +19,9 @@ end;
 
 function restart(r)
 
+    assert(r and r ~= "", "sys.restart cause null")
+    if errDump and errDump.appendErr and type(errDump.appendErr) == "function" then errDump.appendErr("restart[" .. r .. "];") end
+    log.warn("sys.restart", r)
 	rtos.restart();
 end;
 
