@@ -33,6 +33,13 @@ coroutine.resume = function(...)
 		local arg = {
 			...
 		};
+		if not arg[1] then
+			local traceBack = debug.traceback(co) or "empty";
+			traceBack = traceBack and traceBack ~= "" and (arg[2] or "") .. "\r\n" .. traceBack or (arg[2] or "");
+			log.error("coroutine.resume", traceBack);
+			if errDump and type(errDump.appendErr) == "function" then
+				errDump.appendErr(traceBack);
+			end;
 			if _G.COROUTINE_ERROR_RESTART then
 				rtos.restart();
 			end;
