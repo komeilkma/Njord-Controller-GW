@@ -1,5 +1,7 @@
 
 require("log");
+require("utils");
+require("i2c-patch");
 
 module(..., package.seeall);
 SCRIPT_LIB_VER = "1.0.0";
@@ -76,4 +78,10 @@ function waitUntilExt(id, ms)
 		return unpack(message);
 	end;
 	return false;
+end;
+
+function taskInit(fun, ...)
+	local co = coroutine.create(fun);
+	coroutine.resume(co, ...);
+	return co;
 end;
